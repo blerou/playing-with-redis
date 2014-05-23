@@ -8,18 +8,19 @@ class RedisTest extends PHPUnit_Framework_TestCase
         $sock = fsockopen("127.0.0.1", 6379, $errno, $errstr, 10);
         $this->assertThat($sock, $this->isType("resource"));
 
-        fwrite($sock, "*3\r\n");
-        $this->writeBulkString($sock, "set");
-        $this->writeBulkString($sock, "foo");
-        $this->writeBulkString($sock, "bar");
+        $this->writeCmd($sock, ["set", "foo", "bar"]);
         $res = fread($sock, 1000);
         $this->assertEquals("+OK\r\n", $res);
 
-        fwrite($sock, "*2\r\n");
-        $this->writeBulkString($sock, "get");
-        $this->writeBulkString($sock, "foo");
+        $this->writeCmd($sock, ["get", "foo"]);
         $res = fread($sock, 1000);
         $this->assertEquals($this->bulkString("bar"), $res, "$res something different");
+    }
+
+    private function writeCmd($sock, $args)
+    {
+        fwrite($sock, "*".count($args)."\r\n");
+        foreach ($args as $arg) $this->writeBulkString($sock, $arg);
     }
 
     private function writeBulkString($sock, $str)
