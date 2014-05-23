@@ -24,7 +24,11 @@ class RedisTest extends PHPUnit_Framework_TestCase
 
     private function writeBulkString($sock, $str)
     {
-        fwrite($sock, "$".strlen($str)."\r\n");
-        fwrite($sock, "$str\r\n");
+        fwrite($sock, $this->bulkString($str));
+    }
+
+    private function bulkString($str)
+    {
+        return "$".strlen($str)."\r\n$str\r\n";
     }
 }
