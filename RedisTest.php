@@ -19,7 +19,7 @@ class RedisTest extends PHPUnit_Framework_TestCase
         $this->writeBulkString($sock, "get");
         $this->writeBulkString($sock, "foo");
         $res = fread($sock, 1000);
-        $this->assertEquals("$3\r\nbar\r\n", $res, "$res something different");
+        $this->assertEquals($this->bulkString("bar"), $res, "$res something different");
     }
 
     private function writeBulkString($sock, $str)
