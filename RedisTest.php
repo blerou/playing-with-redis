@@ -9,21 +9,22 @@ class RedisTest extends PHPUnit_Framework_TestCase
         $this->assertThat($sock, $this->isType("resource"));
 
         fwrite($sock, "*3\r\n");
-        fwrite($sock, "$3\r\n");
-        fwrite($sock, "set\r\n");
-        fwrite($sock, "$3\r\n");
-        fwrite($sock, "foo\r\n");
-        fwrite($sock, "$3\r\n");
-        fwrite($sock, "bar\r\n");
+        $this->writeBulkString($sock, "set");
+        $this->writeBulkString($sock, "foo");
+        $this->writeBulkString($sock, "bar");
         $res = fread($sock, 1000);
         $this->assertEquals("+OK\r\n", $res);
 
         fwrite($sock, "*2\r\n");
-        fwrite($sock, "$3\r\n");
-        fwrite($sock, "get\r\n");
-        fwrite($sock, "$3\r\n");
-        fwrite($sock, "foo\r\n");
+        $this->writeBulkString($sock, "get");
+        $this->writeBulkString($sock, "foo");
         $res = fread($sock, 1000);
         $this->assertEquals("$3\r\nbar\r\n", $res, "$res something different");
+    }
+
+    private function writeBulkString($sock, $str)
+    {
+        fwrite($sock, "$".strlen($str)."\r\n");
+        fwrite($sock, "$str\r\n");
     }
 }
