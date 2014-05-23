@@ -1,0 +1,12 @@
+{
+    "name": "blerou/redisclient",
+    "authors": [
+        {
+            "name": "blerou",
+            "email": "sulik.szabolcs@ustream.tv"
+        }
+    ],
+    "require": {
+        "phpunit/phpunit": "~4.1.0"
+    }
+}
