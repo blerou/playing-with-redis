@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * TODOs:
+ *  - extract "run command and give back the result"
+ *  - do something with error case (with return values in general)
+ */
+
 class RedisTest extends PHPUnit_Framework_TestCase
 {
     /**
