@@ -4,6 +4,8 @@
  * TODOs:
  *  + extract "run command and give back the result"
  *  - do something with error case (with return values in general)
+ *  - extract general patterns/constants?
+ *  - handle different response types based on first byte
  */
 
 class RedisTest extends PHPUnit_Framework_TestCase
