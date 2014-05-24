@@ -10,6 +10,10 @@ class RedisTest extends PHPUnit_Framework_TestCase
         $sock = fsockopen("127.0.0.1", 6379);
         $this->assertThat($sock, $this->isType("resource"));
 
+        $this->writeCmd($sock, ["flushdb"]);
+        $res = fread($sock, 1000);
+        $this->assertEquals("+OK\r\n", $res);
+
         $this->writeCmd($sock, ["set", "foo", "bar"]);
         $res = fread($sock, 1000);
         $this->assertEquals("+OK\r\n", $res);
@@ -25,6 +29,9 @@ class RedisTest extends PHPUnit_Framework_TestCase
     public function getSomethingThatIsNotSetYet()
     {
         $sock = fsockopen("127.0.0.1", 6379);
+
+        $this->writeCmd($sock, ["flushdb"]);
+        $res = fread($sock, 1000);
 
         $this->writeCmd($sock, ["get", "undefined"]);
         $res = fread($sock, 1000);
