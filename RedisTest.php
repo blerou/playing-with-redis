@@ -2,10 +2,12 @@
 
 class RedisTest extends PHPUnit_Framework_TestCase
 {
-    public function test()
+    /**
+     * @test
+     */
+    public function setSomethingAndGetItBack()
     {
-        $errno = $errstr = null;
-        $sock = fsockopen("127.0.0.1", 6379, $errno, $errstr, 10);
+        $sock = fsockopen("127.0.0.1", 6379);
         $this->assertThat($sock, $this->isType("resource"));
 
         $this->writeCmd($sock, ["set", "foo", "bar"]);
@@ -15,6 +17,18 @@ class RedisTest extends PHPUnit_Framework_TestCase
         $this->writeCmd($sock, ["get", "foo"]);
         $res = fread($sock, 1000);
         $this->assertEquals($this->bulkString("bar"), $res, "$res something different");
+    }
+
+    /**
+     * @test
+     */
+    public function getSomethingThatIsNotSetYet()
+    {
+        $sock = fsockopen("127.0.0.1", 6379);
+
+        $this->writeCmd($sock, ["get", "undefined"]);
+        $res = fread($sock, 1000);
+        $this->assertEquals("$-1\r\n", $res);
     }
 
     private function writeCmd($sock, $args)
