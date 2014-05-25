@@ -19,10 +19,11 @@ class RedisTest extends PHPUnit_Framework_TestCase
         $this->assertThat($sock, $this->isType("resource"));
 
         $res = $this->writeCmd($sock, ["flushdb"]);
-        $this->assertEquals("+OK\r\n", $res);
+        $okResponse = "+OK\r\n";
+        $this->assertEquals($okResponse, $res);
 
         $res = $this->writeCmd($sock, ["set", "foo", "bar"]);
-        $this->assertEquals("+OK\r\n", $res);
+        $this->assertEquals($okResponse, $res);
 
         $res = $this->writeCmd($sock, ["get", "foo"]);
         $this->assertEquals($this->bulkString("bar"), $res, "$res something different");
