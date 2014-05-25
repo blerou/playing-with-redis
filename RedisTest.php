@@ -15,7 +15,7 @@ class RedisTest extends PHPUnit_Framework_TestCase
      */
     public function setSomethingAndGetItBack()
     {
-        $sock = fsockopen("127.0.0.1", 6379);
+        $sock = $this->open();
         $this->assertThat($sock, $this->isType("resource"));
 
         $res = $this->writeCmd($sock, ["flushdb"]);
@@ -33,7 +33,7 @@ class RedisTest extends PHPUnit_Framework_TestCase
      */
     public function getSomethingThatIsNotSetYet()
     {
-        $sock = fsockopen("127.0.0.1", 6379);
+        $sock = $this->open();
 
         $this->writeCmd($sock, ["flushdb"]);
 
@@ -56,5 +56,13 @@ class RedisTest extends PHPUnit_Framework_TestCase
     private function bulkString($str)
     {
         return "$".strlen($str)."\r\n$str\r\n";
+    }
+
+    /**
+     * @return resource
+     */
+    private function open()
+    {
+        return fsockopen("127.0.0.1", 6379);
     }
 }
